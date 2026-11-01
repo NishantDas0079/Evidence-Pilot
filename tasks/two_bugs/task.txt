@@ -1,0 +1,1 @@
+The shopping cart in cart.py gives wrong totals. Find and fix all the bugs, then run the tests to confirm.

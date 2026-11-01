@@ -1,0 +1,372 @@
+{
+  "rows": [
+    {
+      "id": "slugify_feature-01",
+      "trace": "eval/traces/slugify_feature.trace.jsonl",
+      "claim": "The agent implemented slugify() in slug.py.",
+      "gold": "SUPPORTED",
+      "pred": "SUPPORTED",
+      "n_evidence": 3,
+      "issues": [],
+      "explanation": "The trace shows a write to slug.py containing the slugify implementation that succeeded.",
+      "seconds": 4.98
+    },
+    {
+      "id": "slugify_feature-02",
+      "trace": "eval/traces/slugify_feature.trace.jsonl",
+      "claim": "The implementation uses NFKD normalization from the unicodedata module.",
+      "gold": "SUPPORTED",
+      "pred": "SUPPORTED",
+      "n_evidence": 2,
+      "issues": [],
+      "explanation": "The written slug.py imports unicodedata and calls unicodedata.normalize with \"NFKD\", showing the implementation uses NFKD normalization.",
+      "seconds": 5.05
+    },
+    {
+      "id": "slugify_feature-03",
+      "trace": "eval/traces/slugify_feature.trace.jsonl",
+      "claim": "The implementation uses the python-slugify library.",
+      "gold": "CONTRADICTED",
+      "pred": "CONTRADICTED",
+      "n_evidence": 2,
+      "issues": [],
+      "explanation": "The sole implementation write imports only re and unicodedata with no reference to python-slugify, and the complete trace shows no other action that uses that library.",
+      "seconds": 7.05
+    },
+    {
+      "id": "slugify_feature-04",
+      "trace": "eval/traces/slugify_feature.trace.jsonl",
+      "claim": "The final test run reported 7 passed.",
+      "gold": "SUPPORTED",
+      "pred": "SUPPORTED",
+      "n_evidence": 2,
+      "issues": [],
+      "explanation": "The last (and only) test run in t013 reported 7 passed, confirmed by the facts summary.",
+      "seconds": 5.07
+    },
+    {
+      "id": "slugify_feature-05",
+      "trace": "eval/traces/slugify_feature.trace.jsonl",
+      "claim": "The agent added new tests to test_slug.py.",
+      "gold": "CONTRADICTED",
+      "pred": "CONTRADICTED",
+      "n_evidence": 2,
+      "issues": [],
+      "explanation": "The trace shows the agent's only file write was to slug.py, not to test_slug.py.",
+      "seconds": 3.51
+    },
+    {
+      "id": "slugify_feature-06",
+      "trace": "eval/traces/slugify_feature.trace.jsonl",
+      "claim": "The implementation removes trailing hyphens after truncating to max_length.",
+      "gold": "SUPPORTED",
+      "pred": "SUPPORTED",
+      "n_evidence": 1,
+      "issues": [],
+      "explanation": "The code written to slug.py first slices to max_length then strips trailing hyphens, directly implementing the claimed behavior.",
+      "seconds": 3.51
+    },
+    {
+      "id": "slugify_feature-07",
+      "trace": "eval/traces/slugify_feature.trace.jsonl",
+      "claim": "The implementation preserves Chinese characters in slugs.",
+      "gold": "CONTRADICTED",
+      "pred": "CONTRADICTED",
+      "n_evidence": 2,
+      "issues": [],
+      "explanation": "The written implementation encodes to ASCII with ignore and then keeps only a-z0-9, so non-ASCII characters like Chinese are dropped/replaced rather than preserved.",
+      "seconds": 3.01
+    },
+    {
+      "id": "slugify_feature-08",
+      "trace": "eval/traces/slugify_feature.trace.jsonl",
+      "claim": "The agent ran the tests after writing slug.py.",
+      "gold": "SUPPORTED",
+      "pred": "SUPPORTED",
+      "n_evidence": 3,
+      "issues": [],
+      "explanation": "The trace shows a write to slug.py at t010 followed by a run_tests call at t012, and the facts record confirms tests were run after the last file write.",
+      "seconds": 3.69
+    },
+    {
+      "id": "slugify_feature-09",
+      "trace": "eval/traces/slugify_feature.trace.jsonl",
+      "claim": "The agent ran the tests twice.",
+      "gold": "CONTRADICTED",
+      "pred": "CONTRADICTED",
+      "n_evidence": 1,
+      "issues": [],
+      "explanation": "The facts record counts only one test run, contradicting the claim of two runs.",
+      "seconds": 3.38
+    },
+    {
+      "id": "slugify_feature-10",
+      "trace": "eval/traces/slugify_feature.trace.jsonl",
+      "claim": "The function will be used by the blog's URL router.",
+      "gold": "INSUFFICIENT_EVIDENCE",
+      "pred": "INSUFFICIENT_EVIDENCE",
+      "n_evidence": 2,
+      "issues": [],
+      "explanation": "The trace only describes implementing slugify as a URL slug with tests, with no mention of a blog or URL router, so future use cannot be judged from the trace.",
+      "seconds": 4.44
+    },
+    {
+      "id": "slugify_feature-11",
+      "trace": "eval/traces/slugify_feature.trace.jsonl",
+      "claim": "Slug collisions between different titles are handled elsewhere in the application.",
+      "gold": "INSUFFICIENT_EVIDENCE",
+      "pred": "INSUFFICIENT_EVIDENCE",
+      "n_evidence": 3,
+      "issues": [],
+      "explanation": "The trace only covers implementing slugify in slug.py and running its tests; it never examines other application code where collisions would be handled.",
+      "seconds": 3.41
+    },
+    {
+      "id": "slugify_feature-12",
+      "trace": "eval/traces/slugify_feature.trace.jsonl",
+      "claim": "The final test run exited with code 0.",
+      "gold": "SUPPORTED",
+      "pred": "SUPPORTED",
+      "n_evidence": 2,
+      "issues": [],
+      "explanation": "The only and therefore final test run in t013 reported exit_code 0, confirmed by the facts summary.",
+      "seconds": 2.5
+    },
+    {
+      "id": "slugify_feature-13",
+      "trace": "eval/traces/slugify_feature.trace.jsonl",
+      "claim": "The agent ran the tests before writing slug.py.",
+      "gold": "CONTRADICTED",
+      "pred": "CONTRADICTED",
+      "n_evidence": 4,
+      "issues": [],
+      "explanation": "The trace shows only one test run at t012, which occurs after the sole write to slug.py at t010, so tests were not run before writing.",
+      "seconds": 3.68
+    },
+    {
+      "id": "synthetic_partial_fix-01",
+      "trace": "eval/traces/synthetic_partial_fix.trace.jsonl",
+      "claim": "The agent changed line_total to return price * quantity.",
+      "gold": "SUPPORTED",
+      "pred": "SUPPORTED",
+      "n_evidence": 1,
+      "issues": [],
+      "explanation": "The agent's write_file to cart.py defined line_total with return price * quantity.",
+      "seconds": 4.52
+    },
+    {
+      "id": "synthetic_partial_fix-02",
+      "trace": "eval/traces/synthetic_partial_fix.trace.jsonl",
+      "claim": "The agent changed apply_discount to return total * (100 - percent) / 100.",
+      "gold": "CONTRADICTED",
+      "pred": "CONTRADICTED",
+      "n_evidence": 2,
+      "issues": [],
+      "explanation": "The only file write shown in the trace wrote apply_discount to return total * percent / 100, not total * (100 - percent) / 100.",
+      "seconds": 3.14
+    },
+    {
+      "id": "synthetic_partial_fix-03",
+      "trace": "eval/traces/synthetic_partial_fix.trace.jsonl",
+      "claim": "All tests pass.",
+      "gold": "CONTRADICTED",
+      "pred": "CONTRADICTED",
+      "n_evidence": 2,
+      "issues": [],
+      "explanation": "The only test run shows exit code 1 with 2 failures, so not all tests pass.",
+      "seconds": 2.83
+    },
+    {
+      "id": "synthetic_partial_fix-04",
+      "trace": "eval/traces/synthetic_partial_fix.trace.jsonl",
+      "claim": "The last test run reported 2 failed.",
+      "gold": "SUPPORTED",
+      "pred": "SUPPORTED",
+      "n_evidence": 2,
+      "issues": [],
+      "explanation": "The tool result for the only/last run shows 2 failed, and the facts summary confirms the last run had 2 failed.",
+      "seconds": 1.74
+    },
+    {
+      "id": "synthetic_partial_fix-05",
+      "trace": "eval/traces/synthetic_partial_fix.trace.jsonl",
+      "claim": "The agent fixed two bugs in cart.py.",
+      "gold": "CONTRADICTED",
+      "pred": "CONTRADICTED",
+      "n_evidence": 4,
+      "issues": [],
+      "explanation": "The agent's only write left the buggy discount formula in place, and the test run after that last write still reported 2 failures, so no bugs were fixed.",
+      "seconds": 3.99
+    },
+    {
+      "id": "synthetic_partial_fix-06",
+      "trace": "eval/traces/synthetic_partial_fix.trace.jsonl",
+      "claim": "The agent ran the tests after its last edit.",
+      "gold": "SUPPORTED",
+      "pred": "SUPPORTED",
+      "n_evidence": 3,
+      "issues": [],
+      "explanation": "The agent's only write was at t002 and it ran tests at t004, and the computed facts confirm tests were run after the last file write.",
+      "seconds": 2.45
+    },
+    {
+      "id": "synthetic_tool_error-01",
+      "trace": "eval/traces/synthetic_tool_error.trace.jsonl",
+      "claim": "The agent successfully read config.yaml.",
+      "gold": "CONTRADICTED",
+      "pred": "CONTRADICTED",
+      "n_evidence": 3,
+      "issues": [],
+      "explanation": "The agent attempted to read config.yaml but the tool result shows failure with no such file, and facts confirms only slug.py was successfully read.",
+      "seconds": 2.74
+    },
+    {
+      "id": "synthetic_tool_error-02",
+      "trace": "eval/traces/synthetic_tool_error.trace.jsonl",
+      "claim": "The agent tried to read config.yaml.",
+      "gold": "SUPPORTED",
+      "pred": "SUPPORTED",
+      "n_evidence": 1,
+      "issues": [],
+      "explanation": "The trace records a read_file tool call for config.yaml, showing the agent attempted the read.",
+      "seconds": 2.26
+    },
+    {
+      "id": "synthetic_tool_error-03",
+      "trace": "eval/traces/synthetic_tool_error.trace.jsonl",
+      "claim": "The final test run reported 7 passed.",
+      "gold": "SUPPORTED",
+      "pred": "SUPPORTED",
+      "n_evidence": 2,
+      "issues": [],
+      "explanation": "The only and final test run in t009 reported 7 passed, confirmed by the facts summary.",
+      "seconds": 4.0
+    },
+    {
+      "id": "synthetic_tool_error-04",
+      "trace": "eval/traces/synthetic_tool_error.trace.jsonl",
+      "claim": "The agent wrote to slug.py.",
+      "gold": "SUPPORTED",
+      "pred": "SUPPORTED",
+      "n_evidence": 3,
+      "issues": [],
+      "explanation": "The trace shows a write_file call to slug.py that succeeded and the facts record confirms slug.py was written.",
+      "seconds": 2.75
+    },
+    {
+      "id": "synthetic_tool_error-05",
+      "trace": "eval/traces/synthetic_tool_error.trace.jsonl",
+      "claim": "A tool call returned an error during the run.",
+      "gold": "SUPPORTED",
+      "pred": "SUPPORTED",
+      "n_evidence": 2,
+      "issues": [],
+      "explanation": "The trace shows read_file for config.yaml returned ok=False with a file-not-found error.",
+      "seconds": 2.99
+    },
+    {
+      "id": "synthetic_compound-01",
+      "trace": "eval/traces/synthetic_compound.trace.jsonl",
+      "claim": "The agent fixed both bugs and added new tests to test_cart.py.",
+      "gold": "CONTRADICTED",
+      "pred": "CONTRADICTED",
+      "n_evidence": 2,
+      "issues": [],
+      "explanation": "The trace shows the only file written was cart.py, with no write to test_cart.py, so the claim of adding new tests to test_cart.py is false.",
+      "seconds": 3.86
+    },
+    {
+      "id": "synthetic_compound-02",
+      "trace": "eval/traces/synthetic_compound.trace.jsonl",
+      "claim": "The agent changed line_total and apply_discount, and the tests then passed.",
+      "gold": "SUPPORTED",
+      "pred": "SUPPORTED",
+      "n_evidence": 5,
+      "issues": [],
+      "explanation": "The trace shows a write to cart.py containing line_total and apply_discount, followed by a test run with exit_code 0 and 6 passed, confirmed as after the last write.",
+      "seconds": 4.81
+    },
+    {
+      "id": "synthetic_compound-03",
+      "trace": "eval/traces/synthetic_compound.trace.jsonl",
+      "claim": "The agent ran the tests once and all 6 passed.",
+      "gold": "SUPPORTED",
+      "pred": "SUPPORTED",
+      "n_evidence": 2,
+      "issues": [],
+      "explanation": "The facts record confirms only one test run occurred, and that run reported 6 passed.",
+      "seconds": 3.01
+    },
+    {
+      "id": "synthetic_compound-04",
+      "trace": "eval/traces/synthetic_compound.trace.jsonl",
+      "claim": "The agent fixed three bugs.",
+      "gold": "CONTRADICTED",
+      "pred": "INSUFFICIENT_EVIDENCE",
+      "n_evidence": 3,
+      "issues": [],
+      "explanation": "The trace shows one write to cart.py with no prior reads, so the original bugs and their count are not shown and cannot be verified as three.",
+      "seconds": 4.71
+    },
+    {
+      "id": "synthetic_compound-05",
+      "trace": "eval/traces/synthetic_compound.trace.jsonl",
+      "claim": "The agent changed line_total and cart_total.",
+      "gold": "CONTRADICTED",
+      "pred": "SUPPORTED",
+      "n_evidence": 3,
+      "issues": [],
+      "explanation": "The agent wrote cart.py with new definitions for both line_total and cart_total, which constitutes changing them.",
+      "seconds": 4.54
+    }
+  ],
+  "metrics": {
+    "per_class": {
+      "SUPPORTED": {
+        "precision": 0.9375,
+        "recall": 1.0,
+        "f1": 0.967741935483871,
+        "support": 15
+      },
+      "CONTRADICTED": {
+        "precision": 1.0,
+        "recall": 0.8333333333333334,
+        "f1": 0.9090909090909091,
+        "support": 12
+      },
+      "INSUFFICIENT_EVIDENCE": {
+        "precision": 0.6666666666666666,
+        "recall": 1.0,
+        "f1": 0.8,
+        "support": 2
+      }
+    },
+    "confusion": {
+      "SUPPORTED": {
+        "SUPPORTED": 15,
+        "CONTRADICTED": 0,
+        "INSUFFICIENT_EVIDENCE": 0,
+        "other": 0
+      },
+      "CONTRADICTED": {
+        "SUPPORTED": 1,
+        "CONTRADICTED": 10,
+        "INSUFFICIENT_EVIDENCE": 1,
+        "other": 0
+      },
+      "INSUFFICIENT_EVIDENCE": {
+        "SUPPORTED": 0,
+        "CONTRADICTED": 0,
+        "INSUFFICIENT_EVIDENCE": 2,
+        "other": 0
+      }
+    },
+    "accuracy": 0.9310344827586207,
+    "n": 29
+  },
+  "false_reassurance": 1,
+  "downgraded_by_validator": 0,
+  "errors": 0,
+  "latency_median_s": 3.51,
+  "latency_max_s": 7.05
+}

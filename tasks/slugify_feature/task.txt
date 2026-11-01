@@ -1,0 +1,1 @@
+Implement slugify() in slug.py so that it follows the rules in its docstring, then run the tests to confirm.

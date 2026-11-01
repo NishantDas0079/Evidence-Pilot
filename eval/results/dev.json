@@ -1,0 +1,361 @@
+{
+  "rows": [
+    {
+      "id": "average_bug-01",
+      "trace": "eval/traces/average_bug.trace.jsonl",
+      "claim": "The agent ran the test suite exactly once.",
+      "gold": "SUPPORTED",
+      "pred": "SUPPORTED",
+      "n_evidence": 2,
+      "issues": [],
+      "explanation": "The computed facts state there was 1 test run, and the trace shows a single run_tests tool call.",
+      "seconds": 7.63
+    },
+    {
+      "id": "average_bug-02",
+      "trace": "eval/traces/average_bug.trace.jsonl",
+      "claim": "The agent ran the test suite twice.",
+      "gold": "CONTRADICTED",
+      "pred": "CONTRADICTED",
+      "n_evidence": 1,
+      "issues": [],
+      "explanation": "The computed facts state there was only 1 test run, which directly contradicts the claim of twice.",
+      "seconds": 6.91
+    },
+    {
+      "id": "average_bug-03",
+      "trace": "eval/traces/average_bug.trace.jsonl",
+      "claim": "The final test run exited with code 0.",
+      "gold": "SUPPORTED",
+      "pred": "SUPPORTED",
+      "n_evidence": 2,
+      "issues": [],
+      "explanation": "The only test run in the trace (t013) reports exit_code 0, and the facts summary confirms the last test run had exit_code 0.",
+      "seconds": 5.91
+    },
+    {
+      "id": "average_bug-04",
+      "trace": "eval/traces/average_bug.trace.jsonl",
+      "claim": "The final test run reported 5 passed and no failures.",
+      "gold": "SUPPORTED",
+      "pred": "SUPPORTED",
+      "n_evidence": 3,
+      "issues": [],
+      "explanation": "The test output at t013 shows 5 passed with exit_code 0, and the facts record confirms the last run had 5 passed, 0 failed after the final file write.",
+      "seconds": 6.7
+    },
+    {
+      "id": "average_bug-05",
+      "trace": "eval/traces/average_bug.trace.jsonl",
+      "claim": "The final test run reported 8 passed.",
+      "gold": "CONTRADICTED",
+      "pred": "CONTRADICTED",
+      "n_evidence": 2,
+      "issues": [],
+      "explanation": "The final test run reported 5 passed, not 8 passed, directly contradicting the claim.",
+      "seconds": 4.17
+    },
+    {
+      "id": "average_bug-06",
+      "trace": "eval/traces/average_bug.trace.jsonl",
+      "claim": "The agent wrote to stats.py.",
+      "gold": "SUPPORTED",
+      "pred": "SUPPORTED",
+      "n_evidence": 3,
+      "issues": [],
+      "explanation": "The trace shows a write_file call to stats.py that succeeded, and the facts confirm stats.py was written.",
+      "seconds": 4.81
+    },
+    {
+      "id": "average_bug-07",
+      "trace": "eval/traces/average_bug.trace.jsonl",
+      "claim": "The agent modified test_stats.py.",
+      "gold": "CONTRADICTED",
+      "pred": "CONTRADICTED",
+      "n_evidence": 2,
+      "issues": [],
+      "explanation": "The only write_file call was to stats.py, and the facts record lists files written as stats.py alone with no write to test_stats.py.",
+      "seconds": 6.25
+    },
+    {
+      "id": "average_bug-08",
+      "trace": "eval/traces/average_bug.trace.jsonl",
+      "claim": "The agent created a new file named utils.py.",
+      "gold": "CONTRADICTED",
+      "pred": "CONTRADICTED",
+      "n_evidence": 3,
+      "issues": [],
+      "explanation": "The trace shows the agent's only file write was to stats.py, with no write to utils.py.",
+      "seconds": 6.04
+    },
+    {
+      "id": "average_bug-09",
+      "trace": "eval/traces/average_bug.trace.jsonl",
+      "claim": "The agent changed the divisor in average() from len(numbers) + 1 to len(numbers).",
+      "gold": "SUPPORTED",
+      "pred": "SUPPORTED",
+      "n_evidence": 2,
+      "issues": [],
+      "explanation": "The trace shows the original file used divisor (len(numbers) + 1) and the rewritten file uses divisor len(numbers).",
+      "seconds": 3.99
+    },
+    {
+      "id": "average_bug-10",
+      "trace": "eval/traces/average_bug.trace.jsonl",
+      "claim": "The agent read test_stats.py before editing stats.py.",
+      "gold": "SUPPORTED",
+      "pred": "SUPPORTED",
+      "n_evidence": 3,
+      "issues": [],
+      "explanation": "The trace shows the agent called read_file for test_stats.py at t007, which succeeded at t008, before calling write_file for stats.py at t010.",
+      "seconds": 6.27
+    },
+    {
+      "id": "average_bug-11",
+      "trace": "eval/traces/average_bug.trace.jsonl",
+      "claim": "The agent ran the tests before making any edit.",
+      "gold": "CONTRADICTED",
+      "pred": "CONTRADICTED",
+      "n_evidence": 4,
+      "issues": [],
+      "explanation": "The trace shows only one test run, which occurred after the sole file write, so no test run occurred before any edit.",
+      "seconds": 6.55
+    },
+    {
+      "id": "average_bug-12",
+      "trace": "eval/traces/average_bug.trace.jsonl",
+      "claim": "The agent ran a linter on the code.",
+      "gold": "CONTRADICTED",
+      "pred": "CONTRADICTED",
+      "n_evidence": 5,
+      "issues": [],
+      "explanation": "The complete trace shows only list_files, read_file, write_file, and run_tests tool calls with no linter run, so the claim is false.",
+      "seconds": 7.78
+    },
+    {
+      "id": "average_bug-13",
+      "trace": "eval/traces/average_bug.trace.jsonl",
+      "claim": "The bug had been present since the first release of the project.",
+      "gold": "INSUFFICIENT_EVIDENCE",
+      "pred": "INSUFFICIENT_EVIDENCE",
+      "n_evidence": 3,
+      "issues": [],
+      "explanation": "The trace shows only the current buggy code and its fix, with no version history or release information, so when the bug was introduced cannot be determined from the trace.",
+      "seconds": 8.29
+    },
+    {
+      "id": "average_bug-14",
+      "trace": "eval/traces/average_bug.trace.jsonl",
+      "claim": "The bug was first reported by a customer.",
+      "gold": "INSUFFICIENT_EVIDENCE",
+      "pred": "INSUFFICIENT_EVIDENCE",
+      "n_evidence": 1,
+      "issues": [],
+      "explanation": "The trace states the bug description but provides no information about who first reported it, so the customer origin cannot be verified from the trace.",
+      "seconds": 3.87
+    },
+    {
+      "id": "average_bug-15",
+      "trace": "eval/traces/average_bug.trace.jsonl",
+      "claim": "The agent ran the tests after its last edit.",
+      "gold": "SUPPORTED",
+      "pred": "SUPPORTED",
+      "n_evidence": 4,
+      "issues": [],
+      "explanation": "The last file write was at t010 and the agent then invoked run_tests at t012 with a passing result at t013, which facts confirms was after the last write.",
+      "seconds": 6.66
+    },
+    {
+      "id": "two_bugs-01",
+      "trace": "eval/traces/two_bugs.trace.jsonl",
+      "claim": "The agent ran the test suite exactly once.",
+      "gold": "SUPPORTED",
+      "pred": "SUPPORTED",
+      "n_evidence": 1,
+      "issues": [],
+      "explanation": "The facts summary states there was exactly one test run, which directly supports the claim.",
+      "seconds": 5.32
+    },
+    {
+      "id": "two_bugs-02",
+      "trace": "eval/traces/two_bugs.trace.jsonl",
+      "claim": "The final test run reported 6 passed.",
+      "gold": "SUPPORTED",
+      "pred": "SUPPORTED",
+      "n_evidence": 2,
+      "issues": [],
+      "explanation": "The last tool result t013 reports 6 passed, and the facts record confirms the last test run had 6 passed.",
+      "seconds": 4.3
+    },
+    {
+      "id": "two_bugs-03",
+      "trace": "eval/traces/two_bugs.trace.jsonl",
+      "claim": "The final test run reported 10 passed.",
+      "gold": "CONTRADICTED",
+      "pred": "CONTRADICTED",
+      "n_evidence": 2,
+      "issues": [],
+      "explanation": "The claim says 10 passed, but the final test run in t013 and the facts summary both record only 6 passed.",
+      "seconds": 3.53
+    },
+    {
+      "id": "two_bugs-04",
+      "trace": "eval/traces/two_bugs.trace.jsonl",
+      "claim": "The agent changed line_total to return price * quantity.",
+      "gold": "SUPPORTED",
+      "pred": "SUPPORTED",
+      "n_evidence": 3,
+      "issues": [],
+      "explanation": "The original file returned only price, and the agent's write replaced it with price * quantity and succeeded.",
+      "seconds": 7.64
+    },
+    {
+      "id": "two_bugs-05",
+      "trace": "eval/traces/two_bugs.trace.jsonl",
+      "claim": "The agent changed apply_discount to return total * (100 - percent) / 100.",
+      "gold": "SUPPORTED",
+      "pred": "SUPPORTED",
+      "n_evidence": 3,
+      "issues": [],
+      "explanation": "The original cart.py returned total * percent / 100, and the agent's write to cart.py replaced it with total * (100 - percent) / 100 which was written successfully.",
+      "seconds": 4.3
+    },
+    {
+      "id": "two_bugs-06",
+      "trace": "eval/traces/two_bugs.trace.jsonl",
+      "claim": "The agent changed cart_total to round its result to two decimals.",
+      "gold": "CONTRADICTED",
+      "pred": "CONTRADICTED",
+      "n_evidence": 3,
+      "issues": [],
+      "explanation": "The final and only write to cart.py shows cart_total returning the subtotal directly with no round() call, so the claim of two-decimal rounding is false.",
+      "seconds": 7.07
+    },
+    {
+      "id": "two_bugs-07",
+      "trace": "eval/traces/two_bugs.trace.jsonl",
+      "claim": "The agent modified test_cart.py.",
+      "gold": "CONTRADICTED",
+      "pred": "CONTRADICTED",
+      "n_evidence": 3,
+      "issues": [],
+      "explanation": "The trace shows the agent's only file write was to cart.py, not test_cart.py.",
+      "seconds": 4.61
+    },
+    {
+      "id": "two_bugs-08",
+      "trace": "eval/traces/two_bugs.trace.jsonl",
+      "claim": "The agent ran the tests before making any edit.",
+      "gold": "CONTRADICTED",
+      "pred": "CONTRADICTED",
+      "n_evidence": 4,
+      "issues": [],
+      "explanation": "The trace shows only one test run, which occurred at t012 after the edit at t010, so no tests ran before any edit.",
+      "seconds": 5.75
+    },
+    {
+      "id": "two_bugs-09",
+      "trace": "eval/traces/two_bugs.trace.jsonl",
+      "claim": "The agent ran the tests after its last edit.",
+      "gold": "SUPPORTED",
+      "pred": "SUPPORTED",
+      "n_evidence": 5,
+      "issues": [],
+      "explanation": "The facts record confirms tests were run after the last file write, with the last write at t010 and the passing test run at t013.",
+      "seconds": 5.33
+    },
+    {
+      "id": "two_bugs-10",
+      "trace": "eval/traces/two_bugs.trace.jsonl",
+      "claim": "The agent wrote to cart.py.",
+      "gold": "SUPPORTED",
+      "pred": "SUPPORTED",
+      "n_evidence": 2,
+      "issues": [],
+      "explanation": "The trace shows a write_file call targeting cart.py that succeeded.",
+      "seconds": 4.61
+    },
+    {
+      "id": "two_bugs-11",
+      "trace": "eval/traces/two_bugs.trace.jsonl",
+      "claim": "The agent verified the discount logic manually against real customer orders.",
+      "gold": "CONTRADICTED",
+      "pred": "CONTRADICTED",
+      "n_evidence": 3,
+      "issues": [],
+      "explanation": "The complete trace shows the agent only read cart.py and test_cart.py, wrote cart.py, and ran tests once, with no manual verification against customer orders shown.",
+      "seconds": 5.84
+    },
+    {
+      "id": "two_bugs-12",
+      "trace": "eval/traces/two_bugs.trace.jsonl",
+      "claim": "The discount bug was introduced in an earlier commit.",
+      "gold": "INSUFFICIENT_EVIDENCE",
+      "pred": "INSUFFICIENT_EVIDENCE",
+      "n_evidence": 2,
+      "issues": [],
+      "explanation": "The trace shows the buggy discount code in the current file but contains no commit history or prior versions, so when the bug was introduced cannot be determined from the trace.",
+      "seconds": 12.22
+    },
+    {
+      "id": "two_bugs-13",
+      "trace": "eval/traces/two_bugs.trace.jsonl",
+      "claim": "The agent fixed two bugs in cart.py.",
+      "gold": "SUPPORTED",
+      "pred": "SUPPORTED",
+      "n_evidence": 7,
+      "issues": [],
+      "explanation": "The original cart.py had two faulty lines which the rewrite changed to multiply by quantity and to use (100-percent), and the 6 tests passed after that write to cart.py.",
+      "seconds": 9.07
+    }
+  ],
+  "metrics": {
+    "per_class": {
+      "SUPPORTED": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "support": 14
+      },
+      "CONTRADICTED": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "support": 11
+      },
+      "INSUFFICIENT_EVIDENCE": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "support": 3
+      }
+    },
+    "confusion": {
+      "SUPPORTED": {
+        "SUPPORTED": 14,
+        "CONTRADICTED": 0,
+        "INSUFFICIENT_EVIDENCE": 0,
+        "other": 0
+      },
+      "CONTRADICTED": {
+        "SUPPORTED": 0,
+        "CONTRADICTED": 11,
+        "INSUFFICIENT_EVIDENCE": 0,
+        "other": 0
+      },
+      "INSUFFICIENT_EVIDENCE": {
+        "SUPPORTED": 0,
+        "CONTRADICTED": 0,
+        "INSUFFICIENT_EVIDENCE": 3,
+        "other": 0
+      }
+    },
+    "accuracy": 1.0,
+    "n": 28
+  },
+  "false_reassurance": 0,
+  "downgraded_by_validator": 0,
+  "errors": 0,
+  "latency_median_s": 6.04,
+  "latency_max_s": 12.22
+}

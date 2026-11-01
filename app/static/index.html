@@ -1,0 +1,361 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>EvidencePilot</title>
+<style>
+:root {
+  --paper: #f3f6f4; --sheet: #ffffff; --ink: #17262b; --muted: #55666b; --rule: #c6d2ce;
+  --accent: #1d4f63; --mark: #ffe66d;
+  --sup: #1c6b4a; --sup-bg: #e0f0e7;
+  --con: #a32e1c; --con-bg: #f8e3de;
+  --ins: #86590a; --ins-bg: #f8ecce;
+  --nv: #4a585d; --nv-bg: #e6ebea;
+  --serif: "Iowan Old Style", "Palatino Linotype", Palatino, "Book Antiqua", Georgia, serif;
+  --mono: ui-monospace, "Cascadia Code", "SF Mono", Consolas, "Liberation Mono", monospace;
+  --sans: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --paper: #0f1a1d; --sheet: #162428; --ink: #e5eeec; --muted: #93a5a8; --rule: #2c4046;
+    --accent: #7fc4dc; --mark: #6d5d00;
+    --sup: #7ed1a6; --sup-bg: #163326;
+    --con: #f09a8a; --con-bg: #3a1e19;
+    --ins: #e8c26b; --ins-bg: #352a0f;
+    --nv: #b4c2c5; --nv-bg: #223136;
+  }
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--paper); color: var(--ink); font: 16px/1.5 var(--sans); }
+a, button, select, textarea, summary { font: inherit; }
+:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+ 
+header { max-width: 1240px; margin: 0 auto; padding: 28px 20px 8px; }
+h1 { margin: 0; font: 600 2.1rem/1.15 var(--serif); letter-spacing: -0.01em; }
+.lede { margin: 6px 0 0; max-width: 62ch; color: var(--muted); font-family: var(--serif); font-size: 1.1rem; }
+ 
+.bar { max-width: 1240px; margin: 0 auto; padding: 14px 20px; display: flex; flex-wrap: wrap; gap: 10px 16px; align-items: center; }
+.bar label { font-weight: 600; }
+select { padding: 8px 10px; border: 1px solid var(--rule); border-radius: 2px; background: var(--sheet); color: var(--ink); max-width: 100%; }
+.runnote { flex-basis: 100%; margin: 0; padding: 8px 12px; border-left: 4px solid var(--accent); background: var(--sheet); color: var(--muted); font-size: 0.95rem; }
+.runnote.synthetic { border-left-color: var(--ins); }
+ 
+main { max-width: 1240px; margin: 0 auto; padding: 0 20px 56px; display: grid; gap: 28px; grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); align-items: start; }
+@media (max-width: 900px) { main { grid-template-columns: minmax(0, 1fr); } }
+ 
+h2 { margin: 0 0 4px; font: 600 1.25rem/1.3 var(--serif); }
+.sub { margin: 0 0 12px; color: var(--muted); font-size: 0.95rem; }
+ 
+/* the record: ledger rows */
+.ledger { border-top: 2px solid var(--ink); background: var(--sheet); max-height: 78vh; overflow: auto; }
+@media (max-width: 900px) { .ledger { max-height: 50vh; } }
+.facts { margin: 0; padding: 12px 14px; border-bottom: 3px double var(--ink); background: var(--sheet); }
+.facts h3 { margin: 0 0 6px; font: 600 1rem/1.3 var(--serif); }
+.facts p { margin: 0 0 8px; color: var(--muted); font-size: 0.88rem; }
+.facts pre { margin: 0; white-space: pre-wrap; font: 0.86rem/1.5 var(--mono); }
+.row { border-bottom: 1px solid var(--rule); }
+.row > summary { display: grid; grid-template-columns: 4.6ch 11ch minmax(0, 1fr); gap: 10px; padding: 8px 14px; cursor: pointer; list-style: none; align-items: baseline; }
+.row > summary::-webkit-details-marker { display: none; }
+.row .rid { font: 0.82rem var(--mono); color: var(--muted); }
+.row .rkind { font-size: 0.85rem; color: var(--muted); }
+.row .rtext { font: 0.86rem var(--mono); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.row[open] > summary .rtext { color: var(--muted); }
+.row pre { margin: 0; padding: 4px 14px 14px calc(14px + 4.6ch + 10px); white-space: pre-wrap; word-break: break-word; font: 0.86rem/1.5 var(--mono); }
+.row.target { animation: pulse 1.6s ease-out 1; }
+@keyframes pulse { 0% { background: var(--mark); } 100% { background: transparent; } }
+@media (prefers-reduced-motion: reduce) { .row.target { animation: none; } }
+mark { background: var(--mark); color: inherit; padding: 0 1px; }
+ 
+/* the report */
+textarea { width: 100%; min-height: 150px; padding: 12px; border: 1px solid var(--rule); border-radius: 2px; background: var(--sheet); color: var(--ink); font: 1.05rem/1.55 var(--serif); resize: vertical; }
+.actions { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin: 10px 0; }
+button { padding: 9px 16px; border: 1px solid var(--ink); border-radius: 2px; background: var(--sheet); color: var(--ink); cursor: pointer; }
+button.primary { background: var(--ink); color: var(--paper); font-weight: 600; }
+button:disabled { opacity: 0.55; cursor: not-allowed; }
+.count { margin-left: auto; color: var(--muted); font-size: 0.88rem; }
+.try { margin: 0 0 6px; color: var(--muted); font-size: 0.92rem; }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 8px; }
+.chips button { padding: 5px 10px; border-color: var(--rule); font-size: 0.9rem; }
+ 
+#status { min-height: 1.5em; margin: 8px 0; }
+#status.error { padding: 10px 12px; border-left: 4px solid var(--con); background: var(--con-bg); color: var(--con); }
+ 
+.tally { display: flex; flex-wrap: wrap; gap: 6px 14px; margin: 14px 0 4px; font-weight: 600; }
+.t-sup { color: var(--sup); } .t-con { color: var(--con); } .t-ins { color: var(--ins); } .t-nv { color: var(--nv); }
+.verdict { display: grid; grid-template-columns: 6px minmax(0, 1fr); border-bottom: 1px solid var(--rule); background: var(--sheet); }
+.verdict:first-of-type { border-top: 2px solid var(--ink); }
+.verdict > .bar6 { background: var(--nv); }
+.verdict.sup > .bar6 { background: var(--sup); } .verdict.con > .bar6 { background: var(--con); }
+.verdict.ins > .bar6 { background: var(--ins); } .verdict.nv > .bar6 { background: var(--nv); }
+.vbody { padding: 12px 14px; }
+.vword { display: inline-block; padding: 1px 8px; font-weight: 700; font-size: 0.92rem; }
+.sup .vword { color: var(--sup); background: var(--sup-bg); } .con .vword { color: var(--con); background: var(--con-bg); }
+.ins .vword { color: var(--ins); background: var(--ins-bg); } .nv .vword { color: var(--nv); background: var(--nv-bg); }
+.claim { margin: 6px 0 4px; font: 600 1.05rem/1.4 var(--serif); }
+.why { margin: 0 0 6px; }
+.hint { margin: 0 0 6px; color: var(--muted); font-size: 0.9rem; font-style: italic; }
+.quote { margin: 8px 0 0; padding: 6px 12px; border-left: 3px solid var(--rule); }
+.quote q { display: block; font: 0.88rem/1.45 var(--mono); quotes: none; word-break: break-word; }
+.quote .where { display: flex; gap: 12px; align-items: center; margin-top: 4px; font-size: 0.88rem; color: var(--muted); }
+.quote button { padding: 2px 10px; font-size: 0.85rem; border-color: var(--accent); color: var(--accent); background: transparent; }
+details.checks { margin-top: 8px; } details.checks summary { cursor: pointer; color: var(--accent); font-size: 0.9rem; }
+details.checks ul { margin: 6px 0 0; padding-left: 20px; color: var(--muted); font-size: 0.9rem; }
+.limits { margin-top: 18px; padding: 12px 14px; border: 1px dashed var(--rule); }
+.limits h3 { margin: 0 0 6px; font: 600 1rem/1.3 var(--serif); }
+.limits ul { margin: 0; padding-left: 20px; color: var(--muted); font-size: 0.92rem; }
+footer { max-width: 1240px; margin: 0 auto; padding: 0 20px 40px; color: var(--muted); font-size: 0.88rem; }
+</style>
+</head>
+<body>
+<header>
+  <h1>EvidencePilot</h1>
+  <p class="lede">Compare what a coding agent says it did with what its recorded run shows. Every verdict comes with a quote you can find in the record.</p>
+</header>
+ 
+<div class="bar">
+  <label for="run">Recorded run</label>
+  <select id="run" aria-describedby="runnote"></select>
+  <p id="runnote" class="runnote"></p>
+</div>
+ 
+<main>
+  <section aria-labelledby="record-h">
+    <h2 id="record-h">The record</h2>
+    <p class="sub">Every step the agent took, in order. Open a step to read it.</p>
+    <div class="ledger" id="ledger" tabindex="0" aria-label="Recorded steps"></div>
+  </section>
+ 
+  <section aria-labelledby="report-h">
+    <h2 id="report-h">The report</h2>
+    <p class="sub">This is the agent's own final report. Edit it, or add a claim, then audit it against the record.</p>
+    <textarea id="report" maxlength="4000" aria-label="Report to audit"></textarea>
+    <p class="try">Add a claim to test:</p>
+    <div class="chips" id="chips"></div>
+    <div class="actions">
+      <button id="auditBtn" class="primary" type="button">Audit this report</button>
+      <button id="resetBtn" type="button">Restore the agent's report</button>
+      <span class="count" id="count">0 / 4000</span>
+    </div>
+    <div id="status" role="status" aria-live="polite"></div>
+    <div id="results"></div>
+  </section>
+</main>
+ 
+<footer>Built for the Meta Global AI Developer Hackathon. The coding agent and the auditor both run on Muse Spark through Meta Model API. Audits use recorded runs only; nothing on this page runs code.</footer>
+ 
+<script>
+"use strict";
+const MAX_CHARS = 4000;
+const CLAIM_CHIPS = [
+  "All tests pass.",
+  "I ran the tests twice.",
+  "I also added new tests.",
+  "I did not change any test files.",
+];
+const VERDICT = {
+  SUPPORTED: { word: "Supported", icon: "✓", cls: "sup", tally: "t-sup", hint: "" },
+  CONTRADICTED: { word: "Contradicted", icon: "✗", cls: "con", tally: "t-con", hint: "" },
+  INSUFFICIENT_EVIDENCE: { word: "Not settled by the record", icon: "?", cls: "ins", tally: "t-ins",
+    hint: "The record does not settle this claim. That is not a finding that it is false." },
+  NOT_VERIFIABLE: { word: "Not checkable", icon: "–", cls: "nv", tally: "t-nv",
+    hint: "An opinion or vague statement, not a fact the record could confirm." },
+};
+ 
+const $ = (id) => document.getElementById(id);
+let runs = [], current = null, itemText = new Map();
+ 
+function el(tag, attrs = {}, ...kids) {
+  const n = document.createElement(tag);
+  for (const [k, v] of Object.entries(attrs)) n.setAttribute(k, v);
+  for (const k of kids) if (k != null) n.append(k);
+  return n;
+}
+function setStatus(text, isError = false) {
+  const s = $("status"); s.textContent = text; s.className = isError ? "error" : "";
+}
+function setBusy(busy) { for (const id of ["auditBtn", "resetBtn", "run"]) $(id).disabled = busy; }
+function updateCount() { $("count").textContent = `${$("report").value.length} / ${MAX_CHARS}`; }
+ 
+async function getJSON(url) {
+  const res = await fetch(url);
+  if (!res.ok) throw new Error(`Could not load ${url} (HTTP ${res.status}).`);
+  return res.json();
+}
+ 
+/* ---- the record ---- */
+const KIND_LABEL = { task: "task", agent_message: "agent note", tool_call: "tool call", tool_result: "tool result", final_report: "final report", facts: "computed" };
+ 
+function fillPre(pre, text, excerpt) {
+  pre.replaceChildren();
+  if (excerpt) {
+    const tokens = excerpt.trim().split(/\s+/).map((t) => t.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"));
+    const m = tokens.length ? new RegExp(tokens.join("\\s+")).exec(text) : null;
+    if (m) {
+      pre.append(text.slice(0, m.index), el("mark", {}, m[0]), text.slice(m.index + m[0].length));
+      return;
+    }
+  }
+  pre.append(text);
+}
+ 
+function renderRecord(run) {
+  const ledger = $("ledger");
+  ledger.replaceChildren();
+  itemText = new Map();
+  for (const item of run.items) {
+    itemText.set(item.id, item.text);
+    if (item.kind === "facts") {
+      const pre = el("pre", { "data-pre": item.id });
+      fillPre(pre, item.text, null);
+      ledger.append(el("section", { class: "facts", id: `row-${item.id}` },
+        el("h3", {}, "Facts computed by code"),
+        el("p", {}, "Counted directly from the record, not written by a model."), pre));
+    }
+  }
+  for (const item of run.items) {
+    if (item.kind === "facts") continue;
+    const pre = el("pre", { "data-pre": item.id });
+    fillPre(pre, item.text, null);
+    const preview = item.text.split("\n")[0];
+    ledger.append(el("details", { class: "row", id: `row-${item.id}` },
+      el("summary", {}, el("span", { class: "rid" }, item.id),
+        el("span", { class: "rkind" }, KIND_LABEL[item.kind] || item.kind),
+        el("span", { class: "rtext" }, preview)),
+      pre));
+  }
+}
+ 
+function showInRecord(itemId, excerpt) {
+  const row = $(`row-${itemId}`);
+  if (!row) return;
+  if (row.tagName === "DETAILS") row.open = true;
+  document.querySelectorAll(".row.target").forEach((r) => r.classList.remove("target"));
+  const pre = row.querySelector("pre");
+  if (pre) fillPre(pre, itemText.get(itemId) || "", excerpt);
+  row.scrollIntoView({ block: "center", behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
+  void row.offsetWidth;
+  row.classList.add("target");
+}
+ 
+/* ---- runs ---- */
+function describeRun(run) {
+  const note = $("runnote");
+  note.className = "runnote" + (run.synthetic ? " synthetic" : "");
+  note.textContent = run.synthetic
+    ? "Synthetic run: the agent's decisions were scripted to create this situation. The files and test output in it are real."
+    : "Recorded run: Muse Spark acted as the coding agent. Task given to the agent: " + run.task;
+}
+ 
+async function loadRun(id) {
+  setBusy(true); setStatus("");
+  $("results").replaceChildren();
+  try {
+    current = await getJSON(`/api/runs/${encodeURIComponent(id)}`);
+    describeRun(current);
+    renderRecord(current);
+    $("report").value = current.report || "";
+    updateCount();
+  } catch (e) { setStatus(e.message, true); }
+  finally { setBusy(false); }
+}
+ 
+/* ---- audit ---- */
+function messageFor(status, detail) {
+  if (status === 422) return detail || "The report must be between 1 and 4000 characters.";
+  if (status === 429) return detail || "Too many audits right now. Please wait a while and try again.";
+  if (status === 503) return "The auditing model is not configured on the server.";
+  if (status === 502) return "The model service returned an error. Try the audit again.";
+  if (status === 404) return "That run is no longer available. Reload the page.";
+  return `Unexpected error (HTTP ${status}).`;
+}
+ 
+async function runAudit() {
+  const report = $("report").value;
+  if (!report.trim()) { setStatus("Write or paste a report to audit first.", true); return; }
+  setBusy(true);
+  $("results").replaceChildren();
+  setStatus("Extracting claims and checking each one against the record…");
+  try {
+    const res = await fetch("/api/audit", {
+      method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ run_id: current.id, report }),
+    });
+    if (!res.ok) {
+      let detail = "";
+      try { const j = await res.json(); if (typeof j.detail === "string") detail = j.detail; } catch (e) {}
+      throw new Error(messageFor(res.status, detail));
+    }
+    renderAudit(await res.json());
+    setStatus("");
+  } catch (err) {
+    setStatus(err instanceof TypeError ? "Could not reach the server. Check your connection." : err.message, true);
+  } finally { setBusy(false); }
+}
+ 
+function renderAudit(a) {
+  const out = $("results"); out.replaceChildren();
+  const tally = el("div", { class: "tally" });
+  for (const [key, v] of Object.entries(VERDICT)) {
+    tally.append(el("span", { class: v.tally }, `${v.icon} ${v.word}: ${(a.summary || {})[key] ?? 0}`));
+  }
+  out.append(tally);
+  if (a.claims.length === 0) out.append(el("p", {}, "No factual claims were found in this report."));
+  for (const c of a.claims) {
+    const v = VERDICT[c.status] || VERDICT.NOT_VERIFIABLE;
+    const body = el("div", { class: "vbody" },
+      el("span", { class: "vword" }, `${v.icon} ${v.word}`),
+      el("p", { class: "claim" }, c.claim),
+      el("p", { class: "why" }, c.explanation));
+    if (v.hint) body.append(el("p", { class: "hint" }, v.hint));
+    for (const ev of c.evidence || []) {
+      const btn = el("button", { type: "button" }, "Show in the record");
+      btn.addEventListener("click", () => showInRecord(ev.item_id, ev.excerpt));
+      body.append(el("blockquote", { class: "quote" },
+        el("q", {}, `“${ev.excerpt.trim()}”`),
+        el("div", { class: "where" }, el("span", {}, ev.item_id === "facts" ? "Facts computed by code" : `Step ${ev.item_id}`), btn)));
+    }
+    if ((c.validation_issues || []).length) {
+      const ul = el("ul");
+      for (const i of c.validation_issues) ul.append(el("li", {}, i));
+      body.append(el("details", { class: "checks" }, el("summary", {}, "Why this verdict was changed or limited"), ul));
+    }
+    out.append(el("article", { class: `verdict ${v.cls}` }, el("div", { class: "bar6" }), body));
+  }
+  if ((a.limitations || []).length) {
+    const ul = el("ul");
+    for (const l of a.limitations) ul.append(el("li", {}, l));
+    out.append(el("section", { class: "limits" }, el("h3", {}, "What this audit cannot tell you"), ul));
+  }
+}
+ 
+/* ---- setup ---- */
+async function init() {
+  for (const text of CLAIM_CHIPS) {
+    const b = el("button", { type: "button" }, text);
+    b.addEventListener("click", () => {
+      const box = $("report"), sep = box.value && !/\s$/.test(box.value) ? " " : "";
+      if ((box.value + sep + text).length <= MAX_CHARS) { box.value += sep + text; updateCount(); }
+      box.focus();
+    });
+    $("chips").append(b);
+  }
+  $("report").addEventListener("input", updateCount);
+  $("auditBtn").addEventListener("click", runAudit);
+  $("resetBtn").addEventListener("click", () => {
+    if (current) { $("report").value = current.report || ""; updateCount(); $("results").replaceChildren(); setStatus(""); }
+  });
+  $("run").addEventListener("change", (e) => loadRun(e.target.value));
+  try {
+    runs = await getJSON("/api/runs");
+    if (!runs.length) { setStatus("No recorded runs are available on this server.", true); return; }
+    for (const r of runs) {
+      $("run").append(el("option", { value: r.id }, r.title + (r.synthetic ? " (synthetic)" : "")));
+    }
+    await loadRun(runs[0].id);
+  } catch (e) { setStatus(e.message, true); }
+}
+init();
+</script>
+</body>
+</html>
