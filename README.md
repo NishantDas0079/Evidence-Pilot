@@ -2,8 +2,8 @@
 
 **Check a coding agent's final report against the recorded run, claim by claim, with a quote from the record for every verdict.**
 
-- Live demo: `LIVE_URL_GOES_HERE`
-- 3-minute video: `VIDEO_URL_GOES_HERE`
+- Live demo: [https://evidence-pilot.onrender.com]
+- 3-minute video: [https://youtu.be/zW5vMNmg0gQ]
 - Built for the Meta Global AI Developer Hackathon, on Muse Spark through Meta Model API.
 
 ## The problem
